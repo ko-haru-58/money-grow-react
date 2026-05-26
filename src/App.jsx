@@ -7,19 +7,28 @@ import Rate from './components/Rate';
 const amounts = [];
 
 for (let i = 1; i <= 10; i++){
-  amounts.push(i);
+  amounts.push({
+    value: 10000 * i,
+    label: `${i}万円`,
+  });
 }
 
 const rates = [];
 
 for (let i = 1; i <= 20; i++){
-  rates.push(i);
+  rates.push({
+	  value: 0.01 * i,
+	  label: `${i}%`,
+  });
 }
 
 const years = [];
 
 for (let i = 1; i <= 50; i++){
-  years.push(i);
+  years.push({
+	  value: i,
+	  label: `${i}年`,
+  });
 }
 
 function App() {

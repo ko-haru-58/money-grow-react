@@ -12,9 +12,9 @@ function Amount(props) {
                 value={amount}
                 onChange={(e) => setAmount(Number(e.target.value))}
             >
-                {props.amounts.map((amountItem) => (
-                    <option key={amountItem} value={amountItem}>
-                        {amountItem}円
+                {props.amounts.map((amount) => (
+                    <option key={amount.value} value={amount.value}>
+                        {amount.label}
                     </option>
                 ))}
             </select>

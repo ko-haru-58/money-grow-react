@@ -12,9 +12,9 @@ function Year(props) {
                 value={year}
                 onChange={(e) => setYear(Number(e.target.value))}
             >
-                {props.years.map((yearItem) => (
-                    <option key={yearItem} value={yearItem}>
-                        {yearItem}年
+                {props.years.map((year) => (
+                    <option key={year.value} value={year.value}>
+                        {year.label}
                     </option>
                 ))}
             </select>

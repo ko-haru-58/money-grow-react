@@ -12,9 +12,9 @@ function Rate(props) {
                 value={rate}
                 onChange={(e) => setRate(Number(e.target.value))}
             >
-                {props.rates.map((rateItem) => (
-                    <option key={rateItem} value={rateItem}>
-                        {rateItem}%
+                {props.rates.map((rate) => (
+                    <option key={rate.value} value={rate.value}>
+                        {rate.label}
                     </option>
                 ))}
             </select>
