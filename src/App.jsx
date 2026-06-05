@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import './css/App.css'
-import Amount from './components/Amount';
-import Year from './components/Year';
-import Rate from './components/Rate';
+import SelectBox from './components/SelectBox';
 
 const amounts = [];
 
@@ -31,24 +29,39 @@ for (let i = 1; i <= 50; i++){
   });
 }
 
-function App() {
+const App = () => {
+  const [amount, setAmount] = useState(10000); // 初期値1万円
+  const [rate, setRate] = useState(0.01); // 初期値1%
+  const [year, setYear] = useState(1); // 初期値1年
   
   return (
     <>
       <div className="amount">
-        <Amount
-          amounts={amounts}
+        <SelectBox
+          id="amount"
+          label="積立金額"
+          value={amount}
+          items={amounts}
+          onChange={setAmount}
         />
       </div>
       <div className="rate">
-        <Rate
-          rates={rates}
+        <SelectBox
+          id="rate"
+          label="利回り"
+          value={rate}
+          items={rates}
+          onChange={setRate}
         />
       </div>
 
       <div className="year">
-        <Year
-          years={years}
+        <SelectBox
+          id="year"
+          label="積立期間"
+          value={year}
+          items={years}
+          onChange={setYear}
         />
       </div>
     </>
