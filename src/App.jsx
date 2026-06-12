@@ -2,6 +2,10 @@ import { useState } from 'react';
 import './css/App.css'
 import SelectBox from './components/SelectBox';
 import TextBox from './components/TextBox';
+import { Line, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement } from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement);
 
 const amounts = [];
 
@@ -54,6 +58,71 @@ const App = () => {
 	// 運用益の計算
 	const profit = formatter.format(resultInt - sumAmountInt);
 
+	// グラフデータの計算 - 年ごとの残高推移
+	const lineChartData = [];
+	const lineChartLabels = [];
+	
+	for (let y = 0; y <= year; y++) {
+		const monthCount = y * 12;
+		const balance = monthCount === 0 ? 0 : Math.round(amount * (((1 + mthRate) ** monthCount - 1) / mthRate));
+		const principal = amount * 12 * y;
+		lineChartData.push(balance);
+		lineChartLabels.push(y);
+	}
+
+	const principalData = [];
+	for (let y = 0; y <= year; y++) {
+		principalData.push(amount * 12 * y);
+	}
+
+	// 円グラフデータ - 最終的な元本と運用益
+	const pieChartData = [sumAmountInt, resultInt - sumAmountInt];
+	const pieChartLabels = ['元本', '運用益'];
+
+	const COLORS = ['#8884d8', '#82ca9d'];
+
+	// Line Chart設定
+	const lineChartConfig = {
+		labels: lineChartLabels,
+		datasets: [
+			{
+				label: '残高',
+				data: lineChartData,
+				borderColor: '#8884d8',
+				backgroundColor: 'rgba(136, 132, 216, 0.1)',
+				tension: 0.1
+			},
+			{
+				label: '元本',
+				data: principalData,
+				borderColor: '#82ca9d',
+				backgroundColor: 'rgba(130, 202, 157, 0.1)',
+				tension: 0.1
+			}
+		]
+	};
+
+	// Bar Chart設定 - 積み上げ棒グラフ
+	const barChartConfig = {
+		labels: ['元本+運用益'],
+		datasets: [
+			{
+				label: '元本',
+				data: [sumAmountInt],
+				backgroundColor: '#8884d8',
+				borderColor: '#fff',
+				borderWidth: 1
+			},
+			{
+				label: '運用益',
+				data: [resultInt - sumAmountInt],
+				backgroundColor: '#82ca9d',
+				borderColor: '#fff',
+				borderWidth: 1
+			}
+		]
+	};
+
 	return (
     	<>
 			<div className = "main-wrapper">
@@ -92,33 +161,116 @@ const App = () => {
 					</div>
 				</div>
 
-				<div className = "output-container">
-				
-					{ /* 元本 */} 
-					<div className="sumAmount">
-						<TextBox
-							id="sumAmount"
-							label="積立元本"
-							value={sumAmount}
-						/>
-					</div>
-
-						{ /* 運用成績 */} 
-						<div className="result">
+				<div className = "output-wrapper">
+					<div className = "output-container">
+					
+						{ /* 元本 */} 
+						<div className="sumAmount">
 							<TextBox
-								id="result"
-								label="運用成績"
-								value={result}
+								id="sumAmount"
+								label="積立元本"
+								value={sumAmount}
 							/>
 						</div>
 
-					{ /* 運用益 */} 
-					<div className="profit">
-						<TextBox
-							id="profit"
-							label="運用益"
-							value={profit}
-						/>
+							{ /* 運用成績 */} 
+							<div className="result">
+								<TextBox
+									id="result"
+									label="運用成績"
+									value={result}
+								/>
+							</div>
+
+						{ /* 運用益 */} 
+						<div className="profit">
+							<TextBox
+								id="profit"
+								label="運用益"
+								value={profit}
+							/>
+						</div>
+					</div>
+
+					<div className="charts-container">
+						{ /* 折れ線グラフ */ }
+						<div className="chart line-chart">
+							<h3>残高推移</h3>
+							<Line data={lineChartConfig} options={{
+								responsive: true,
+								plugins: {
+									legend: {
+										position: 'top',
+										labels: {
+											usePointStyle: true,
+											pointStyle: 'line',
+											pointStyleWidth: 30
+										},
+									},
+									title: {
+										display: false
+									}
+								},
+								scales: {
+									y: {
+										title: {
+											display: true,
+											text: '金額（円）'
+										},
+										ticks: {
+											callback: function(value) {
+												return `${(value / 10000).toLocaleString('ja-JP')}万円`;
+											}
+										},
+									},
+									x: {
+										title: {
+											display: true,
+											text: '年'
+										}
+									}
+								}
+							}} />
+						</div>
+
+						{ /* 円グラフ */ }
+						<div className="chart bar-chart">
+							<h3>最終結果（元本と運用益）</h3>
+							<Bar data={barChartConfig} options={{
+								responsive: true,
+								plugins: {
+									legend: {
+										position: 'top'
+									},
+									tooltip: {
+										callbacks: {
+											label: function(context) {
+												return context.dataset.label + ': ' + formatter.format(context.parsed.y);
+											}
+										}
+									}
+								},
+								scales: {
+									x: {
+										stacked: true,
+										categoryPercentage: 0.5,
+										barPercentage: 0.5
+									},
+									y: {
+										stacked: true,
+										title: {
+											display: true,
+											text: '金額（円）'
+										},
+										ticks: {
+											callback: function(value) {
+												return `${(value / 10000).toLocaleString('ja-JP')}万円`;
+											}
+										},
+									}
+								}
+							}} />
+						</div>
 					</div>
 				</div>
 			</div>
