@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import './css/App.css'
+import './css/charts.css'
+import Header from './components/Header';
 import SelectBox from './components/SelectBox';
 import TextBox from './components/TextBox';
 import { Line, Bar } from 'react-chartjs-2';
@@ -125,155 +127,160 @@ const App = () => {
 
 	return (
     	<>
-			<div className = "main-wrapper">
-				<div className = "input-container">
-					{ /* 積立金額 */} 
-					<div className="amount">
-						<SelectBox
-							id="amount"
-							label="積立金額"
-							value={amount}
-							items={amounts}
-							onChange={setAmount}
-						/>
-					</div>
+			{ /* ヘッダー */} 
+			<Header />
 
-					{ /* 利回り */} 
-					<div className="rate">
-						<SelectBox
-							id="rate"
-							label="利回り"
-							value={rate}
-							items={rates}
-							onChange={setRate}
-						/>
-					</div>
-
-					{ /* 積立期間 */} 
-					<div className="year">
-						<SelectBox
-							id="year"
-							label="積立期間"
-							value={year}
-							items={years}
-							onChange={setYear}
-						/>
-					</div>
-				</div>
-
-				<div className = "output-wrapper">
-					<div className = "output-container">
-					
-						{ /* 元本 */} 
-						<div className="sumAmount">
-							<TextBox
-								id="sumAmount"
-								label="積立元本"
-								value={sumAmount}
+			<main>
+				<div className = "main-wrapper">
+					<div className = "input-container">
+						{ /* 積立金額 */} 
+						<div className="amount">
+							<SelectBox
+								id="amount"
+								label="積立金額"
+								value={amount}
+								items={amounts}
+								onChange={setAmount}
 							/>
 						</div>
 
-							{ /* 運用成績 */} 
-							<div className="result">
+						{ /* 利回り */} 
+						<div className="rate">
+							<SelectBox
+								id="rate"
+								label="利回り"
+								value={rate}
+								items={rates}
+								onChange={setRate}
+							/>
+						</div>
+
+						{ /* 積立期間 */} 
+						<div className="year">
+							<SelectBox
+								id="year"
+								label="積立期間"
+								value={year}
+								items={years}
+								onChange={setYear}
+							/>
+						</div>
+					</div>
+
+					<div className = "output-wrapper">
+						<div className = "output-container">
+						
+							{ /* 元本 */} 
+							<div className="sumAmount">
 								<TextBox
-									id="result"
-									label="運用成績"
-									value={result}
+									id="sumAmount"
+									label="積立元本"
+									value={sumAmount}
 								/>
 							</div>
 
-						{ /* 運用益 */} 
-						<div className="profit">
-							<TextBox
-								id="profit"
-								label="運用益"
-								value={profit}
-							/>
-						</div>
-					</div>
+								{ /* 運用成績 */} 
+								<div className="result">
+									<TextBox
+										id="result"
+										label="運用成績"
+										value={result}
+									/>
+								</div>
 
-					<div className="charts-container">
-						{ /* 折れ線グラフ */ }
-						<div className="chart line-chart">
-							<h3>残高推移</h3>
-							<Line data={lineChartConfig} options={{
-								responsive: true,
-								plugins: {
-									legend: {
-										position: 'top',
-										labels: {
-											usePointStyle: true,
-											pointStyle: 'line',
-											pointStyleWidth: 30
+							{ /* 運用益 */} 
+							<div className="profit">
+								<TextBox
+									id="profit"
+									label="運用益"
+									value={profit}
+								/>
+							</div>
+						</div>
+
+						<div className="charts-container">
+							{ /* 折れ線グラフ */ }
+							<div className="chart line-chart">
+								<h3>残高推移</h3>
+								<Line data={lineChartConfig} options={{
+									responsive: true,
+									plugins: {
+										legend: {
+											position: 'top',
+											labels: {
+												usePointStyle: true,
+												pointStyle: 'line',
+												pointStyleWidth: 30
+											},
 										},
-									},
-									title: {
-										display: false
-									}
-								},
-								scales: {
-									y: {
 										title: {
-											display: true,
-											text: '金額（円）'
-										},
-										ticks: {
-											callback: function(value) {
-												return `${(value / 10000).toLocaleString('ja-JP')}万円`;
-											}
-										},
-									},
-									x: {
-										title: {
-											display: true,
-											text: '年'
+											display: false
 										}
-									}
-								}
-							}} />
-						</div>
-
-						{ /* 円グラフ */ }
-						<div className="chart bar-chart">
-							<h3>最終結果（元本と運用益）</h3>
-							<Bar data={barChartConfig} options={{
-								responsive: true,
-								plugins: {
-									legend: {
-										position: 'top'
 									},
-									tooltip: {
-										callbacks: {
-											label: function(context) {
-												return context.dataset.label + ': ' + formatter.format(context.parsed.y);
+									scales: {
+										y: {
+											title: {
+												display: true,
+												text: '金額（円）'
+											},
+											ticks: {
+												callback: function(value) {
+													return `${(value / 10000).toLocaleString('ja-JP')}万円`;
+												}
+											},
+										},
+										x: {
+											title: {
+												display: true,
+												text: '年'
 											}
 										}
 									}
-								},
-								scales: {
-									x: {
-										stacked: true,
-										categoryPercentage: 0.5,
-										barPercentage: 0.5
-									},
-									y: {
-										stacked: true,
-										title: {
-											display: true,
-											text: '金額（円）'
+								}} />
+							</div>
+
+							{ /* 円グラフ */ }
+							<div className="chart bar-chart">
+								<h3>最終結果（元本と運用益）</h3>
+								<Bar data={barChartConfig} options={{
+									responsive: true,
+									plugins: {
+										legend: {
+											position: 'top'
 										},
-										ticks: {
-											callback: function(value) {
-												return `${(value / 10000).toLocaleString('ja-JP')}万円`;
+										tooltip: {
+											callbacks: {
+												label: function(context) {
+													return context.dataset.label + ': ' + formatter.format(context.parsed.y);
+												}
 											}
+										}
+									},
+									scales: {
+										x: {
+											stacked: true,
+											categoryPercentage: 0.5,
+											barPercentage: 0.5
 										},
+										y: {
+											stacked: true,
+											title: {
+												display: true,
+												text: '金額（円）'
+											},
+											ticks: {
+												callback: function(value) {
+													return `${(value / 10000).toLocaleString('ja-JP')}万円`;
+												}
+											},
+										}
 									}
-								}
-							}} />
+								}} />
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			</main>
     	</>
   	)
 }
