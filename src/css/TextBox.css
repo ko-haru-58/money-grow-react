@@ -1,0 +1,19 @@
+.textbox-group{
+    display: flex;
+    justify-content:space-between;
+}
+
+.textbox-group:not(:last-child){
+    margin-bottom: 10px;
+}
+
+.textbox{
+    width: 160px;
+    font-size: 18px;
+    text-align: right;
+    border: none;
+}
+
+.label{
+    margin-right: 16px;
+}

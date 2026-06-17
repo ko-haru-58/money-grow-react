@@ -1,31 +1,31 @@
-.main-wrapper{
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    padding: 20px;
+main{
+    padding: 10px;
+    margin-bottom: 30px;
 }
 
-.input-container {
-    flex: 0 0 100%;
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.output-wrapper {
-    flex: 1;
+.calculator{
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: center;
 }
 
-.output-container {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+.calculator-controls, .calculator__result {
+    width: calc(100% - 20px);
+    max-width: 600px;
+    padding: 8px;
+    background:rgba(187, 183, 218, 0.3);
 }
 
-.output-container > div {
-    flex: 1;
-    min-width: 150px;
+.arrow {
+    display: inline-block;
+    width: 46px;
+    height: 35px;
+    margin: 10px 0 10px 0;
+    background: #333333;
+    clip-path: polygon(0 44.9%, 19.5% 44.9%, 19.5% 0, 80.5% 0, 80.5% 44.9%, 100% 44.9%, 50% 100%);
+}
+
+.calculator__result {
+    margin-bottom: 30px;
+    background:rgba(126, 190, 171, 0.4);
 }

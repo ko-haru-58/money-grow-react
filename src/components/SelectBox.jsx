@@ -1,15 +1,17 @@
 import { useState } from 'react'
+import '../css/SelectBox.css';
 
 const SelectBox = (props) => {
 
     return (
-        <>
-            <label htmlFor={props.id}>{props.label}</label>
+        <div className='selectbox-group'>
+            <label className="label" htmlFor={props.id}>{props.label}</label>
 
             <select
                 id={props.id}
+                className='selectbox'
                 value={props.value}
-                onChange={(e) => props.onChange(Number(e.target.value))}    //setAmount(Number(e.target.value))
+                onChange={(e) => props.onChange(Number(e.target.value))} 
             >
                 {props.items.map((item) => (
                     <option key={item.value} value={item.value}>
@@ -17,7 +19,7 @@ const SelectBox = (props) => {
                     </option>
                 ))}
             </select>
-        </>
+        </div>
     )
 }
 

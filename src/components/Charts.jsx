@@ -22,19 +22,29 @@ const Charts = ({ amount, rate, year, sumAmountInt, resultInt, formatter }) => {
 	}
 
 	// Line Chart設定
+
+	// y軸の単位切替（最終資産が1億円超なら「億円」、そうでなければ「万円」）
+	const useOku = resultInt > 100000000;
+	const formatYAxis = (value) => {
+		if (useOku) {
+			return (value / 100000000).toLocaleString('ja-JP', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+		}
+		return (value / 10000).toLocaleString('ja-JP');
+	};
+
 	const lineChartConfig = {
 		labels: lineChartLabels,
 		datasets: [
 			{
-				label: '残高',
-				data: lineChartData,
+				label: '元本',
+				data: principalData,
 				borderColor: '#8884d8',
 				backgroundColor: 'rgba(136, 132, 216, 0.1)',
 				tension: 0.1
 			},
 			{
-				label: '元本',
-				data: principalData,
+				label: '資産額',
+				data: lineChartData,
 				borderColor: '#82ca9d',
 				backgroundColor: 'rgba(130, 202, 157, 0.1)',
 				tension: 0.1
@@ -44,7 +54,7 @@ const Charts = ({ amount, rate, year, sumAmountInt, resultInt, formatter }) => {
 
 	// Bar Chart設定 - 積み上げ棒グラフ
 	const barChartConfig = {
-		labels: ['元本+運用益'],
+		labels: ['資産額'],
 		datasets: [
 			{
 				label: '元本',
@@ -54,7 +64,7 @@ const Charts = ({ amount, rate, year, sumAmountInt, resultInt, formatter }) => {
 				borderWidth: 1
 			},
 			{
-				label: '運用益',
+				label: '運用収益',
 				data: [resultInt - sumAmountInt],
 				backgroundColor: '#82ca9d',
 				borderColor: '#fff',
@@ -67,31 +77,33 @@ const Charts = ({ amount, rate, year, sumAmountInt, resultInt, formatter }) => {
 		<div className="charts-container">
 			{ /* 折れ線グラフ */ }
 			<div className="chart line-chart">
-				<h3>残高推移</h3>
+				<h3>資産額推移</h3>
+				<div className="y-unit">{useOku ? '(億円)' : '(万円)'}</div>
 				<Line data={lineChartConfig} options={{
-					responsive: true,
-					plugins: {
-						legend: {
-							position: 'top',
-							labels: {
-								usePointStyle: true,
-								pointStyle: 'line',
-								pointStyleWidth: 30
+						responsive: true,
+						plugins: {
+							legend: {
+								position: 'top',
+								labels: {
+									usePointStyle: true,
+									pointStyle: 'line',
+									pointStyleWidth: 30
+								}
 							},
-						},
-						title: {
-							display: false
-						}
-					},
-					scales: {
-						y: {
 							title: {
-								display: true,
-								text: '金額（円）'
+								display: false
+							}
+						},
+						// scales 設定
+						scales: {
+							y: {
+							title: {
+								display: false,
+								text: useOku ? '単位：億円' : '単位：万円'
 							},
 							ticks: {
 								callback: function(value) {
-									return `${(value / 10000).toLocaleString('ja-JP')}万円`;
+									return formatYAxis(value);
 								}
 							},
 						},
@@ -107,7 +119,8 @@ const Charts = ({ amount, rate, year, sumAmountInt, resultInt, formatter }) => {
 
 			{ /* 棒グラフ */ }
 			<div className="chart bar-chart">
-				<h3>最終結果（元本と運用益）</h3>
+				<h3>最終結果</h3>
+				<div className="y-unit">{useOku ? '(億円)' : '(万円)'}</div>
 				<Bar data={barChartConfig} options={{
 					responsive: true,
 					plugins: {
@@ -131,12 +144,12 @@ const Charts = ({ amount, rate, year, sumAmountInt, resultInt, formatter }) => {
 						y: {
 							stacked: true,
 							title: {
-								display: true,
-								text: '金額（円）'
+								display: false,
+								text: useOku ? '単位：億円' : '単位：万円'
 							},
 							ticks: {
 								callback: function(value) {
-									return `${(value / 10000).toLocaleString('ja-JP')}万円`;
+									return formatYAxis(value);
 								}
 							},
 						}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './css/App.css'
 import './css/Charts.css'
 import Header from './components/Header';
+import Footer from './components/Footer';
 import SelectBox from './components/SelectBox';
 import TextBox from './components/TextBox';
 import Charts from './components/Charts';
@@ -11,7 +12,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const amounts = [];
 
-for (let i = 1; i <= 10; i++){
+for (let i = 1; i <= 20; i++){
 	amounts.push({
     	value: 10000 * i,
     	label: `${i}万円`,
@@ -72,85 +73,71 @@ const App = () => {
 		lineChartLabels.push(y);
 	}
 
-
-
 	return (
     	<>
-			{ /* ヘッダー */} 
 			<Header />
 
 			<main>
-				<div className = "main-wrapper">
-					<div className = "input-container">
+				<div className='calculator'>
+					<div className = 'calculator-controls'>
 						{ /* 積立金額 */} 
-						<div className="amount">
-							<SelectBox
-								id="amount"
-								label="積立金額"
-								value={amount}
-								items={amounts}
-								onChange={setAmount}
-							/>
-						</div>
+						<SelectBox
+							id="amount"
+							label="毎月の積立金額"
+							value={amount}
+							items={amounts}
+							onChange={setAmount}
+						/>
 
 						{ /* 利回り */} 
-						<div className="rate">
-							<SelectBox
-								id="rate"
-								label="利回り"
-								value={rate}
-								items={rates}
-								onChange={setRate}
-							/>
-						</div>
+						<SelectBox
+							id="rate"
+							label="想定利回り(年率)"
+							value={rate}
+							items={rates}
+							onChange={setRate}
+						/>
 
 						{ /* 積立期間 */} 
-						<div className="year">
-							<SelectBox
-								id="year"
-								label="積立期間"
-								value={year}
-								items={years}
-								onChange={setYear}
-							/>
-						</div>
+						<SelectBox
+							id="year"
+							label="積立期間"
+							value={year}
+							items={years}
+							onChange={setYear}
+						/>
 					</div>
 
-					<div className = "output-wrapper">
-						<div className = "output-container">
+					<div className='arrow'></div>
+
+					<div className='calculator__result'>
+						{ /* 元本 */} 
+						<TextBox
+							id="sumAmount"
+							label="元本(A)"
+							value={sumAmount}
+						/>
 						
-							{ /* 元本 */} 
-							<div className="sumAmount">
-								<TextBox
-									id="sumAmount"
-									label="積立元本"
-									value={sumAmount}
-								/>
-							</div>
+						{ /* 運用収益 */} 
+						<TextBox
+							id="profit"
+							label="運用収益(B)"
+							value={profit}
+						/>
 
-								{ /* 運用成績 */} 
-								<div className="result">
-									<TextBox
-										id="result"
-										label="運用成績"
-										value={result}
-									/>
-								</div>
-
-							{ /* 運用益 */} 
-							<div className="profit">
-								<TextBox
-									id="profit"
-									label="運用益"
-									value={profit}
-								/>
-							</div>
-						</div>
-
-						<Charts amount={amount} rate={rate} year={year} sumAmountInt={sumAmountInt} resultInt={resultInt} formatter={formatter} />
+						{ /* 資産額 */} 
+						<TextBox
+							id="result"
+							label="資産額(A+B)"
+							value={result}
+						/>
 					</div>
 				</div>
+
+				<Charts amount={amount} rate={rate} year={year} sumAmountInt={sumAmountInt} resultInt={resultInt} formatter={formatter} />
 			</main>
+
+			<Footer />
     	</>
   	)
 }

@@ -1,0 +1,17 @@
+header{
+    width: 100%;
+    background: blueviolet;
+    text-align: center;
+}
+
+h1{
+    color: white;
+    font-size: 24px;
+    line-height: 2;
+}
+
+@media (min-width: 540px){
+    h1 {
+        font-size: 32px;
+    }
+}
